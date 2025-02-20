@@ -12,6 +12,7 @@ namespace MvcUnitTesting_dotnet8.Controllers
 
         public HomeController(IRepository<Book> bookRepo, ILogger<HomeController> logger)
         {
+            //  Add the following Line to the constructor(s) for the Home controller replacing your id and  name
             ActivityAPIClient.Track(StudentID: "s00236260",
                 StudentName: "james", activityName: "rad302 2025 Week 2 Lab 1",
                 Task: "Running inital tests");

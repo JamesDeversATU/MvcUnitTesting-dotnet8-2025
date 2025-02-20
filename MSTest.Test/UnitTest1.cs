@@ -1,11 +1,31 @@
-namespace MSTest.Test
+using Microsoft.AspNetCore.Mvc;
+using MvcUnitTesting_dotnet8.Models;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace MvcUnitTesting_dotnet8.Controllers
 {
-    [TestClass]
-    public class UnitTest1
+    public class HomeController : Controller
     {
-        [TestMethod]
-        public void TestMethod1()
+        private readonly IRepository<Book> _bookRepository;
+
+        public HomeController(IRepository<Book> bookRepository)
         {
+            _bookRepository = bookRepository;
+        }
+
+        public IActionResult Index(string genre)
+        {
+            var books = _bookRepository.GetAll().Where(b => b.Genre == genre).ToList();
+            ViewData["Genre"] = genre; // Ensuring ViewData contains the Genre
+
+            return View(books);
+        }
+
+        public IActionResult Privacy()
+        {
+            ViewData["Message"] = "Your Privacy is our concern";
+            return View();
         }
     }
 }

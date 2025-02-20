@@ -14,11 +14,13 @@
     <PackageReference Include="JustMock" Version="2024.4.1203.350" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
     <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Desktop\MockExam2024\New folder\rad302-labs-2024-2025-JamesDeversATU\Week1Lab2025-master\Week1Lab2025.csproj" />
     <ProjectReference Include="..\MvcUnitTesting-dotnet8\MvcUnitTesting-dotnet8.csproj" />
   </ItemGroup>
 
