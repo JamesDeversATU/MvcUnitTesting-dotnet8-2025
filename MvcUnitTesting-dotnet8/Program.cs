@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using MvcUnitTesting_dotnet8.Data;
 using MvcUnitTesting_dotnet8.Models;
-using Tracker.WebAPIClient;
 
 namespace MvcUnitTesting_dotnet8
 {
@@ -12,40 +12,43 @@ namespace MvcUnitTesting_dotnet8
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
+                throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+            // Configure the DbContext with EnableRetryOnFailure
             builder.Services.AddDbContext<BookDbContext>(options =>
-                options.UseSqlServer(connectionString));
-            // Register the repository as a service
+                options.UseSqlServer(connectionString, sqlOptions =>
+                    sqlOptions.EnableRetryOnFailure()));
+
+            // Register repository and seeder as services
             builder.Services.AddScoped<IRepository<Book>, WorkingBookRepository<Book>>();
+            builder.Services.AddScoped<BookDbSeeder>();
 
             var app = builder.Build();
+
+            // Seed the database
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var seeder = services.GetRequiredService<BookDbSeeder>();
+                seeder.Seed();
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            // Track the activity
-            ActivityAPIClient.Track(
-                StudentID: "S00236260", // Replace with your student ID
-                StudentName: "James Mccafferty Devers", // Replace with your name
-                activityName: "Rad302 2025 Week 2 Lab 1",
-                Task: "Running Week 2 App"
-            );
 
             app.Run();
         }

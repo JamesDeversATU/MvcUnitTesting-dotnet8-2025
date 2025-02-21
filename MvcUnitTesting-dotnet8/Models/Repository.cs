@@ -18,6 +18,6 @@ namespace MvcUnitTesting_dotnet8.Models
         
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
-        
+        Task<string?> GetAllAsync();
     }
 }
