@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MvcUnitTesting_dotnet8.Models;
 using System.Collections.Generic;
 using System.Linq;
-//test
+
 namespace MvcUnitTesting_dotnet8.Controllers
 {
     public class HomeController : Controller
@@ -16,8 +16,13 @@ namespace MvcUnitTesting_dotnet8.Controllers
 
         public IActionResult Index(string genre)
         {
-            var books = _bookRepository.GetAll().Where(b => b.Genre == genre).ToList();
-            ViewData["Genre"] = genre; // Ensuring ViewData contains the Genre
+            var books = _bookRepository.GetAll();
+
+            if (!string.IsNullOrEmpty(genre))
+            {
+                books = books.Where(b => b.Genre == genre).ToList();
+                ViewData["Genre"] = genre;
+            }
 
             return View(books);
         }

@@ -58,6 +58,31 @@ namespace MvcUnitTesting.Tests.Controllers
         }
 
         [TestMethod]
+        public void test_book_by_genre()
+        {
+            // Arrange
+            var bookRepository = Mock.Create<IRepository<Book>>();
+            Mock.Arrange(() => bookRepository.GetAll()).Returns(new List<Book>
+            {
+                new Book { Genre="Fiction", ID=1, Name="Moby Dick", Price=12.50m},
+                new Book { Genre="Fiction", ID=2, Name="War and Peace", Price=17m},
+                new Book { Genre="Science Fiction", ID=3, Name="Escape from the Vortex", Price=12.50m},
+                new Book { Genre="History", ID=4, Name="The Battle of the Somme", Price=22m},
+            }).MustBeCalled();
+
+            HomeController controller = new HomeController(bookRepository);
+
+            // Act
+            string genre = "Fiction";
+            ViewResult result = controller.Index(genre) as ViewResult;
+            var model = result.Model as IEnumerable<Book>;
+
+            // Assert
+            Assert.IsNotNull(model);
+            Assert.AreEqual(2, model.Count());  // Only two books in "Fiction" genre
+        }
+
+        [TestMethod]
         public void Privacy()
         {
             // Arrange
